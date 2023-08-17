@@ -53,11 +53,11 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
+                    <th> First Name</th>
                     <th>Last Name</th>
-                    <th>Password</th>
+                    <th>Phone</th>
+                    <th>Email</th>
                     <th>Admin</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -66,7 +66,8 @@
                     <td>{{ row['id'] }}</td>
                     <td>{{ row['first_name'] }}</td>
                     <td>{{ row['last_name']}}</td>
-                    <td>{{ row['password'] }}</td>
+                    <td>{{ row['phone']}}</td>
+                    <td>{{ row['email']}}</td>
                     <td>{{ row['admin']}}</td>
                     <!-- <td><a href="/customer/{{ row['id'] }}"><button class="btn btn-primary" type="button" method="POST" action="/customer">Edit</button></a></td> -->
                     <td><a href="/employee_edit/{{ row['id'] }}?search_query={{ search_query }}">
