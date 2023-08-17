@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  app:
+    build: ./app
+    volumes:
+      - ./app:/app
+    ports:
+      - "5000:5000"  # Expose the Flask app on port 5000
+    networks:
+      - my-network1
+    depends_on:
+      - user_crud
+      - employee_crud  # Add dependency on employee_crud
+
+  user_crud:
+    build: ./user_crud
+    volumes:
+      - ./user_crud:/user_crud
+    ports:
+      - "5001:5000"  # Expose the user CRUD API on port 5001
+    networks:
+      - my-network1
+    depends_on:
+      - db
+
+  employee_crud:  # Add the employee_crud service
+    build: ./employee_crud
+    volumes:
+      - ./employee_crud:/employee_crud
+    ports:
+      - "5002:5000"  # Expose the employee CRUD API on port 5002
+    networks:
+      - my-network1
+    depends_on:
+      - db
+
+  db:
+    build: ./db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: my-database
+      MYSQL_USER: my-user
+      MYSQL_PASSWORD: my-password
+    networks:
+      - my-network1
+    volumes:
+      - db-data:/var/lib/mysql
+
+networks:
+  my-network1:
+    external: true
+
+volumes:
+  db-data:

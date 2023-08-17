@@ -1,0 +1,17 @@
+
+.results-table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+td, th {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.searchbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
