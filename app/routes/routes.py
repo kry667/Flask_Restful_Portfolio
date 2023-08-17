@@ -124,7 +124,7 @@ def delete_customer(customer_id):
 
 
 
-###################################### Employees CRUD Requests Routes
+###################################### Employees CRUD Requests Routes #####################################
 
 @routes_bp.route('/create_employee')
 def create_employee():
