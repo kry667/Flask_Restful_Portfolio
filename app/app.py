@@ -81,18 +81,7 @@ if __name__ == '__main__':
 
 
 
-# @app.route("/employees")
-# def employees():
-#     results = Employees.query.all()
 
-#     if not results:
-#         message = "No results found."
-#     else:
-#         message = None
-
-#     results_count = len(results)
-
-#     return render_template('employees.html', results=results, message=message, results_count=results_count)
 
 
 

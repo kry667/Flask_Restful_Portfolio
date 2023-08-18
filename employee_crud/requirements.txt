@@ -2,3 +2,4 @@ flask
 flask-sqlalchemy
 pymysql
 cryptography
+flask_restful

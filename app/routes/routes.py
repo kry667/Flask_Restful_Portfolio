@@ -3,6 +3,7 @@ import requests
 
 routes_bp = Blueprint('routes', __name__)
 
+####################################### Redirection Routes #########################################
 
 @routes_bp.route('/')
 def index():
@@ -12,6 +13,9 @@ def index():
 def admin():
     return render_template('admin.html', results=None)
 
+@routes_bp.route('/create_employee')
+def create_employee():
+    return render_template('create_employee.html')
 
 
 ################################ Customer CRUD Requests Routes #####################################
@@ -126,6 +130,23 @@ def delete_customer(customer_id):
 
 ###################################### Employees CRUD Requests Routes #####################################
 
-@routes_bp.route('/create_employee')
-def create_employee():
-    return render_template('create_employee.html')
+
+@routes_bp.route("/employees")
+def all_employees():
+    # Make a request to the user_crud API to get all customers data
+    user_crud_url = "http://employee_crud:5000/employees"
+    response = requests.get(user_crud_url)
+
+    if response.status_code == 200:
+        employees_data = response.json()
+        if not employees_data:
+            message = "No results found."
+        else:
+            message = None
+        results_count = len(employees_data)
+    else:
+        message = response.status_code
+        employees_data = []
+        results_count = 0
+
+    return render_template('employees.html', results=employees_data, message=message, results_count=results_count)
