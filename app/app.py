@@ -55,45 +55,11 @@ if __name__ == '__main__':
 
 
 
-# @app.route("/query_employees", methods=['POST', 'GET'])
-# def query_employees():
-#     search_query = request.form.get("search")
-
-#     results = Employees.query.filter(
-#         or_(
-#             Employees.id == search_query,
-#             Employees.first_name.like(f'%{search_query}%'),
-#             Employees.last_name.like(f'%{search_query}%'),
-#             Employees.admin.like(f'%{search_query}%')
-#         )
-#     ).all()
-
-#     if not results:
-#         message = "No results found."
-#     else:
-#         message = None
-
-#     results_count = len(results)
-
-#     return render_template('employees.html', results=results, message=message, results_count=results_count)
-
-
-
-
-
-
-
-
-
 # @app.route("/employee_edit/<int:id>", methods=['GET', 'POST'])
 # def edit_employee(id):
 #     result = Employees.query.get(id)
 
 #     return render_template('employee_edit.html', result=result, id=id)
-
-
-
-
 
 
 

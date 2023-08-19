@@ -42,7 +42,7 @@ def customers():
 
 
 @routes_bp.route("/query_customers", methods=['POST', 'GET'])
-def query():
+def query_users():
     search_query = request.form.get('search') if request.form.get('search') is not None else request.args.get('query')
 
     # Make a request to the user_crud API to get search results
@@ -134,8 +134,8 @@ def delete_customer(customer_id):
 @routes_bp.route("/employees")
 def all_employees():
     # Make a request to the user_crud API to get all customers data
-    user_crud_url = "http://employee_crud:5000/employees"
-    response = requests.get(user_crud_url)
+    employee_crud_url = "http://employee_crud:5000/employees"
+    response = requests.get(employee_crud_url)
 
     if response.status_code == 200:
         employees_data = response.json()
@@ -150,3 +150,27 @@ def all_employees():
         results_count = 0
 
     return render_template('employees.html', results=employees_data, message=message, results_count=results_count)
+
+@routes_bp.route("/query_employees", methods=['POST', 'GET'])
+def query_employees():
+
+    search_query = request.form.get('search') if request.form.get('search') is not None else request.args.get('query')
+    # Make a request to the user_crud API to get search results
+    employee_crud_url = "http://employee_crud:5000/query_employees"
+    params = {'query': search_query}
+    response = requests.get(employee_crud_url, params=params)
+
+    if response.status_code == 200:
+        employees_data = response.json()
+        if not employees_data:
+            message = "No results found."
+            results_count = 0
+        else:
+            message = None
+            results_count = len(employees_data)
+    else:
+        message = response.status_code
+        employees_data = []
+        results_count = 0
+
+    return render_template('employees.html', results=employees_data, message=message, results_count=results_count, query=search_query)
