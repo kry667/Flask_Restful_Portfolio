@@ -3,6 +3,7 @@ version: '3'
 services:
   app:
     build: ./app
+    image: kry667/restful:project101-app
     volumes:
       - ./app:/app
     ports:
@@ -15,6 +16,7 @@ services:
 
   user_crud:
     build: ./user_crud
+    image: kry667/restful:project101-user_crud
     volumes:
       - ./user_crud:/user_crud
     ports:
@@ -26,6 +28,7 @@ services:
 
   employee_crud:  # Add the employee_crud service
     build: ./employee_crud
+    image: kry667/restful:project101-employee_crud
     volumes:
       - ./employee_crud:/employee_crud
     ports:
