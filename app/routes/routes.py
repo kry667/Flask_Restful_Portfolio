@@ -17,6 +17,11 @@ def admin():
 def create_employee():
     return render_template('create_employee.html')
 
+@routes_bp.route("/employee_edit/<int:id>", methods=['GET', 'POST'])
+def edit_employee(id):
+    result = id
+    return render_template('employee_edit.html', result=result, id=id)
+
 
 ################################ Customer CRUD Requests Routes #####################################
 

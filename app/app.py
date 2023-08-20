@@ -54,15 +54,6 @@ if __name__ == '__main__':
 #     return redirect("/employees")
 
 
-
-# @app.route("/employee_edit/<int:id>", methods=['GET', 'POST'])
-# def edit_employee(id):
-#     result = Employees.query.get(id)
-
-#     return render_template('employee_edit.html', result=result, id=id)
-
-
-
 # @app.route("/update_employee", methods=['POST', 'GET'])
 # def update_employee():
 
