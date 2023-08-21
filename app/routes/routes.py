@@ -17,10 +17,6 @@ def admin():
 def create_employee():
     return render_template('create_employee.html')
 
-@routes_bp.route("/employee_edit/<int:id>", methods=['GET', 'POST'])
-def edit_employee(id):
-    result = id
-    return render_template('employee_edit.html', result=result, id=id)
 
 
 ################################ Customer CRUD Requests Routes #####################################
@@ -112,6 +108,7 @@ def update_customer():
         message = f"Error: {response.status_code}"
         return render_template('customer.html', result=updated_data, customer_id=customer_id, message=message)
 
+
 @routes_bp.route("/delete_user/<int:customer_id>", methods=['POST'])
 def delete_customer(customer_id):
     # Make a request to the user_crud API to delete the customer
@@ -179,3 +176,20 @@ def query_employees():
         results_count = 0
 
     return render_template('employees.html', results=employees_data, message=message, results_count=results_count, query=search_query)
+
+# The route which fetch single employee data from Restful Api and renders Employee Edition website with this data
+@routes_bp.route("/employee_edit/<int:employee_id>", methods=['GET', 'POST'])
+def edit_employee(employee_id):
+    search_query = request.args.get("query")
+    user_crud_url = f"http://employee_crud:5000/employees/{employee_id}"
+    response = requests.get(user_crud_url)
+
+    if response.status_code == 200:
+        employee_data = response.json()
+        result = employee_data[0]
+        message = None
+    else:
+        message = f"Error: {response.status_code}"
+        result = {}
+
+    return render_template('employee_edit.html', result=result, employee_id=employee_id, query=search_query, message=message)
