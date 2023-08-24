@@ -39,10 +39,7 @@ if __name__ == '__main__':
 
 #     admin_value = request.form.get('admin')
 
-#     if admin_value.lower() == 'true':
-#         is_admin = True
-#     else:
-#         is_admin = False
+#     is_admin = True if request.form.get('admin').lower() == 'true' else False
  
 #     new = Employees(
 #         first_name = request.form.get('first_name'),

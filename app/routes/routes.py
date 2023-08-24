@@ -117,7 +117,7 @@ def delete_customer(customer_id):
 
     if response.status_code == 200:
         # Customer deleted successfully
-        return redirect(f"/customers?query={request.form.get('search')}")
+        return redirect(f"/query_customers?query={request.form.get('query')}")   
     else:
         user_crud_url = f"http://user_crud:5000/customer_edit/{customer_id}"
         response = requests.get(user_crud_url)

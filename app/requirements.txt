@@ -1,6 +1,2 @@
-flask
-flask-sqlalchemy
-pymysql
-cryptography
-flask_restful
+Flask
 requests

@@ -1,5 +1,5 @@
-flask
-flask-sqlalchemy
-pymysql
+Flask
+Flask_RESTful
+flask_sqlalchemy
+SQLAlchemy
 cryptography
-flask_restful

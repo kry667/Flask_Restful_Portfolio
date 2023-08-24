@@ -30,67 +30,62 @@
     </div>
   </header>
 
-    <form action="/update_employee" method="POST">
-        <input type="hidden" name="id" value="{{ result['id'] }}">
-        <div class="container">
-            <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>First Name: </p></div>                
-                <div class="col-4 themed-grid-col">
-                    <input class="form-control" type="text" name="first_name" value="{{ result['first_name'] }}" >                
-                </div>
-            </div>
-        </div>
+  <form action="/update_employee" method="POST">
+      <input type="hidden" name="id" value="{{ result['id'] }}">
+      <div class="container">
+          <div class="row mb-3 text-center mt-5">
+              <div class="col-4 themed-grid-col"><p>First Name: </p></div>                
+              <div class="col-4 themed-grid-col">
+                  <input class="form-control" type="text" name="first_name" value="{{ result['first_name'] }}" >                
+              </div>
+          </div>
+      </div>
 
-        <div class="container">
-            <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>Last Name: </p></div>                
-                <div class="col-4 themed-grid-col">            
-                    <input class="form-control" type="text" name="last_name" value="{{ result['last_name'] }}" >                 
-                </div>
-            </div>
-        </div>
+      <div class="container">
+          <div class="row mb-3 text-center mt-5">
+              <div class="col-4 themed-grid-col"><p>Last Name: </p></div>                
+              <div class="col-4 themed-grid-col">            
+                  <input class="form-control" type="text" name="last_name" value="{{ result['last_name'] }}" >                 
+              </div>
+          </div>
+      </div>
 
-        <div class="container">
-            <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>Password: </p></div>                
-                <div class="col-4 themed-grid-col">                   
-                    <input class="form-control" type="text" name="password" value="{{ result['password'] }}" >                  
-                </div>
-            </div>
-        </div>
+      <div class="container">
+          <div class="row mb-3 text-center mt-5">
+              <div class="col-4 themed-grid-col"><p>Password: </p></div>                
+              <div class="col-4 themed-grid-col">                   
+                  <input class="form-control" type="text" name="password" value="{{ result['password'] }}" >                  
+              </div>
+          </div>
+      </div>
 
-        <div class="container">
-            <div class="row mb-3 text-center mt-5">              
-                    <div class="col-4 themed-grid-col"><label for="boolDropdown">Is Admin:</label></div>
-                    <div class="col-4 themed-grid-col">
-                        <select type="boolDropdown"  class="form-control" name="admin" id="boolDropdown">
-                            <option value="True" {% if result.admin %}selected{% endif %} class="container">True</option>
-                            <option value="False" {% if not result.admin %}selected{% endif %} class="container">False</option>
-                        </select>
-                    </div>
-            </div>
-        </div>
-
-        <div class="container text-center">
-            <div class="row">
-                <div class="col">
-                  <button type="button" class="btn btn-danger">Delete User</button>
-                </div>
-                <div class="col">
-                    <button type="submit" class="btn btn-success">Save Changes</button>
+      <div class="container">
+          <div class="row mb-3 text-center mt-5">              
+                  <div class="col-4 themed-grid-col"><label for="boolDropdown">Is Admin:</label></div>
+                  <div class="col-4 themed-grid-col">
+                      <select type="boolDropdown"  class="form-control" name="admin" id="boolDropdown">
+                          <option value="True" {% if result.admin %}selected{% endif %} class="container">True</option>
+                          <option value="False" {% if not result.admin %}selected{% endif %} class="container">False</option>
+                      </select>
                   </div>
-                <div class="col">
-                  <a href="/query_employees?query={{ query }}" class="btn btn-secondary">Back</a>
+          </div>
+      </div>
+
+      <div class="container text-center">
+          <div class="row">
+              <div class="col">
+                <button type="button" class="btn btn-danger">Delete User</button>
+              </div>
+              <div class="col">
+                  <button type="submit" class="btn btn-success">Save Changes</button>
                 </div>
-            </div>
-        </div>
-    </form>
+              <div class="col">
+                <a href="/query_employees?query={{ query }}" class="btn btn-secondary">Back</a>
+              </div>
+          </div>
+      </div>
+  </form>
 
-
-    
- 
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 </html>

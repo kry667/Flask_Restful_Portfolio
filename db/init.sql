@@ -1,3 +1,17 @@
+CREATE TABLE employees (
+	id INT NOT NULL AUTO_INCREMENT,
+	first_name VARCHAR (255) NOT NULL,
+	last_name VARCHAR (255) NOT NULL,
+	phone VARCHAR (25),
+	email VARCHAR (255),
+	password VARCHAR (255),
+	is_admin VARCHAR(10),
+	PRIMARY KEY(id)
+);
+
+INSERT INTO employees(first_name, last_name, email, password, is_admin) VALUES("Kry", "Woll", "kry@wol.com", "secret123", "True" );
+
+
 CREATE TABLE customers (
 	id INT NOT NULL AUTO_INCREMENT,
 	first_name VARCHAR (255) NOT NULL,
@@ -14,18 +28,6 @@ CREATE TABLE customers (
 
 
 
-CREATE TABLE employees (
-	id INT NOT NULL AUTO_INCREMENT,
-	first_name VARCHAR (255) NOT NULL,
-	last_name VARCHAR (255) NOT NULL,
-	phone VARCHAR (25),
-	email VARCHAR (255),
-	password VARCHAR (255),
-	is_admin VARCHAR(10),
-	PRIMARY KEY(id)
-);
-
-INSERT INTO employees(first_name, last_name, email, password, is_admin) VALUES("Kry", "Woll", "kry@wol.com", "secret123", "True" );
 
 
 
