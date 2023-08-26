@@ -18,7 +18,7 @@ class Employees(db.Model):
     phone = db.Column(db.String(25))
     email = db.Column(db.String(255))
     password = db.Column(db.String(255))
-    admin = db.Column(db.String(10))
+    admin = db.Column(db.Boolean(10))
 
 employees_fields = {
     "id": fields.Integer,

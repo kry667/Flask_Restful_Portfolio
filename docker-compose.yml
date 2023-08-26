@@ -25,6 +25,11 @@ services:
       - my-network1
     depends_on:
       - db
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DB=${MYSQL_DB}
 
   employee_crud:  # Add the employee_crud service
     build: ./employee_crud
@@ -37,6 +42,11 @@ services:
       - my-network1
     depends_on:
       - db
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DB=${MYSQL_DB}
 
   db:
     build: ./db
@@ -44,10 +54,11 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: my-secret-pw
-      MYSQL_DATABASE: my-database
-      MYSQL_USER: my-user
-      MYSQL_PASSWORD: my-password
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_HOST=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DB=${MYSQL_DB}
     networks:
       - my-network1
     volumes:

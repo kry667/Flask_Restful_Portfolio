@@ -68,16 +68,10 @@
                     <td>{{ row['email'] }}</td>
                     <td>{{ row['phone']}}</td>
                     <td>{{ row['city']}}</td>
-                    <!-- <td><a href="/customer/{{ row['id'] }}"><button class="btn btn-primary" type="button" method="POST" action="/customer">Edit</button></a></td> -->
                     <td><a href="/customer_edit/{{ row['id'] }}?query={{ query }}">
-                      <button class="btn btn-primary" type="button">Edit</button>
-                    </a></td>
-                    <!-- <td>
-                      <a href="{{ url_for('routes.edit_customer', customer_id=row['id'], query=query) }}">
                           <button class="btn btn-primary" type="button">Edit</button>
-                      </a>
-                  </td> -->
-                  
+                        </a>
+                    </td>                  
                 </tr>
                 {% endfor %}
             </tbody>

@@ -23,8 +23,6 @@ def password_generator() -> str:
 
     random.shuffle(password_list)
   
-    return ''.join(password_list)
-    
-   
+    return ''.join(password_list)  
 
 print(password_generator())

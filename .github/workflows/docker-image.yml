@@ -25,16 +25,31 @@ jobs:
         docker push kry667/restful:project101-app
 
     - name: Build and push the user_crud service image
+      env:
+        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+        MYSQL_USER: ${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        MYSQL_DB: ${{ secrets.MYSQL_DB }}
       run: |
         docker build -t kry667/restful:project101-user_crud ./user_crud
         docker push kry667/restful:project101-user_crud
 
     - name: Build and push the employee_crud service image
+      env:
+        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+        MYSQL_USER: ${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        MYSQL_DB: ${{ secrets.MYSQL_DB }}
       run: |
         docker build -t kry667/restful:project101-employee_crud ./employee_crud
         docker push kry667/restful:project101-employee_crud
 
     - name: Build and push the db service image
+      env:
+        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+        MYSQL_USER: ${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        MYSQL_DB: ${{ secrets.MYSQL_DB }}
       run: |
         docker build -t kry667/restful:users_employees_db ./db
         docker push kry667/restful:users_employees_db
