@@ -3,3 +3,4 @@ Flask_RESTful
 flask_sqlalchemy
 SQLAlchemy
 cryptography
+pymysql
