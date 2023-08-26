@@ -2,11 +2,12 @@ from flask import Flask, request
 from flask_restful import Resource, Api, fields, marshal_with
 from sqlalchemy import or_
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
 api = Api(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://my-user:my-password@db/my-database'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.environ['MYSQL_USER']}:{os.environ['MYSQL_PASSWORD']}@{os.environ['MYSQL_HOST']}/{os.environ['MYSQL_DB']}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

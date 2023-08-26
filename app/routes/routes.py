@@ -177,7 +177,7 @@ def query_employees():
 
     return render_template('employees.html', results=employees_data, message=message, results_count=results_count, query=search_query)
 
-# The route which fetch single employee data from Restful Api and renders Employee Edition website with this data
+# Fetch single employee data from Restful Api and renders Employee Edition website with this data
 @routes_bp.route("/employee_edit/<int:employee_id>", methods=['GET', 'POST'])
 def edit_employee(employee_id):
     search_query = request.args.get("query")

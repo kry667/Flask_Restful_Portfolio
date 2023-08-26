@@ -7,12 +7,12 @@ services:
     volumes:
       - ./app:/app
     ports:
-      - "5000:5000"  # Expose the Flask app on port 5000
+      - "5000:5000"
     networks:
       - my-network1
     depends_on:
       - user_crud
-      - employee_crud  # Add dependency on employee_crud
+      - employee_crud
 
   user_crud:
     build: ./user_crud
@@ -20,7 +20,7 @@ services:
     volumes:
       - ./user_crud:/user_crud
     ports:
-      - "5001:5000"  # Expose the user CRUD API on port 5001
+      - "5001:5000"
     networks:
       - my-network1
     depends_on:
@@ -31,13 +31,13 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DB=${MYSQL_DB}
 
-  employee_crud:  # Add the employee_crud service
+  employee_crud:
     build: ./employee_crud
     image: kry667/restful:project101-employee_crud
     volumes:
       - ./employee_crud:/employee_crud
     ports:
-      - "5002:5000"  # Expose the employee CRUD API on port 5002
+      - "5002:5000"
     networks:
       - my-network1
     depends_on:
