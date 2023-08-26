@@ -156,7 +156,7 @@ def all_employees():
 @routes_bp.route("/query_employees", methods=['POST', 'GET'])
 def query_employees():
 
-    search_query = request.form.get('search') if request.form.get('search') is not None else request.args.get('query')
+    search_query = request.form.get('search') or request.args.get('query')
     # Make a request to the user_crud API to get search results
     employee_crud_url = "http://employee_crud:5000/query_employees"
     params = {'query': search_query}
