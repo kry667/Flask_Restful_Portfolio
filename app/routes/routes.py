@@ -66,6 +66,7 @@ def query_users():
 
     return render_template('customers.html', results=customers_data, message=message, results_count=results_count, query=search_query)
 
+
 @routes_bp.route("/customer_edit/<int:customer_id>", methods=['GET', 'POST'])
 def edit_customer(customer_id):
     search_query = request.args.get("query")
@@ -177,7 +178,8 @@ def query_employees():
 
     return render_template('employees.html', results=employees_data, message=message, results_count=results_count, query=search_query)
 
-# Fetch single employee data from Restful Api and renders Employee Edition website with this data
+
+# Fetch single employee data from Restful Api and renders Employee Edition page with this data
 @routes_bp.route("/employee_edit/<int:employee_id>", methods=['GET', 'POST'])
 def edit_employee(employee_id):
     search_query = request.args.get("query")
@@ -187,9 +189,55 @@ def edit_employee(employee_id):
     if response.status_code == 200:
         employee_data = response.json()
         result = employee_data[0]
-        message = None
+        message = result.get('message', f"Status: {response.status_code}")
     else:
         message = f"Error: {response.status_code}"
         result = {}
 
     return render_template('employee_edit.html', result=result, employee_id=employee_id, query=search_query, message=message)
+
+@routes_bp.route("/update_employee", methods=['POST'])
+def update_employee():
+
+    employee_id = request.form.get('employee_id')
+    is_admin = True if request.form.get('admin').lower() == 'true' else False
+    # Get the updated data from the form
+    updated_data = {
+        'first_name': request.form.get('first_name'),
+        'last_name': request.form.get('last_name'),
+        'email': request.form.get('email'),
+        'phone': request.form.get('phone'),
+        'password': request.form.get('password'),
+        'admin': is_admin
+    }
+
+    # Make a request to the user_crud API to update the employee data
+    user_crud_url = f"http://employee_crud:5000/update_employee/{employee_id}"
+    response = requests.patch(user_crud_url, json=updated_data)
+
+    if response.status_code == 200:
+        # Employee data updated successfully
+        return redirect(f"/employee_edit/{employee_id}?query={request.form.get('search')}")
+    else:
+        message = f"Error: {response.status_code}"
+        return render_template('employee_edit.html', result=updated_data, employee_id=employee_id, message=message)
+    
+
+@routes_bp.route("/delete_employee/<int:employee_id>", methods=['POST'])
+def delete_employee(employee_id):
+    # Request to the employee_crud Restful_API to delete the employee
+    employee_crud_url = f"http://employee_crud:5000/delete_employee/{employee_id}"
+    response = requests.delete(employee_crud_url)
+
+    if response.status_code == 200:
+        # employee deleted successfully
+        return redirect(f"/query_employees?query={request.form.get('query')}")   
+    else:
+        employee_crud_url = f"http://employee_crud:5000/employee_edit/{employee_id}"
+        response = requests.get(employee_crud_url)
+
+        if response.status_code == 200:
+            employee_data = response.json()
+            result = employee_data[0]
+        message = f"Error: {response.status_code}"
+        return render_template('employee_edit.html', employee_id=employee_id, result=result, message=message)

@@ -5,11 +5,33 @@ CREATE TABLE employees (
 	phone VARCHAR (25),
 	email VARCHAR (255),
 	password VARCHAR (255),
-	is_admin VARCHAR(10),
+	admin BOOL,
 	PRIMARY KEY(id)
 );
 
-INSERT INTO employees(first_name, last_name, email, password, is_admin) VALUES("Kry", "Woll", "kry@wol.com", "secret123", "True" );
+INSERT INTO employees (first_name, last_name, phone, email, password, admin) VALUES
+("Kry", "Woll", '666-667-6969', "kry@wol.com", "secret123", 1),
+('John', 'Doe', '123-456-7890', 'john.doe@example.com', 'password123', 0),
+('Jane', 'Smith', '987-654-3210', 'jane.smith@example.com', 'securepass', 0),
+('Michael', 'Johnson', '555-123-4567', 'michael.j@example.com', 'mikepass', 0),
+('Emily', 'Williams', '333-555-7777', 'emily.w@example.com', 'emilypassword', 0),
+('Robert', 'Brown', '888-444-2222', 'robert.b@example.com', 'brownpass', 0),
+('Sarah', 'Jones', '777-888-9999', 'sarah.j@example.com', 'sarahpass123', 0),
+('David', 'Davis', '444-777-5555', 'david.d@example.com', 'daviddoe', 0),
+('Jennifer', 'Miller', '111-222-3333', 'jennifer.m@example.com', 'millerpass', 0),
+('William', 'Wilson', '666-999-1111', 'william.w@example.com', 'willpass', 0),
+('Jessica', 'Moore', '222-333-4444', 'jessica.m@example.com', 'jessicadoe', 0),
+('Christopher', 'Taylor', '999-111-6666', 'chris.t@example.com', 'christaylor', 0),
+('Amanda', 'Anderson', '777-444-8888', 'amanda.a@example.com', 'amandapass', 0),
+('Matthew', 'Thomas', '555-666-3333', 'matthew.t@example.com', 'mattpass123', 0),
+('Elizabeth', 'Jackson', '444-777-2222', 'elizabeth.j@example.com', 'elizabethpass', 0),
+('James', 'White', '111-555-9999', 'james.w@example.com', 'jamespass', 0),
+('Linda', 'Harris', '888-333-1111', 'linda.h@example.com', 'lindapassword', 0),
+('Daniel', 'Martin', '222-111-7777', 'daniel.m@example.com', 'danielmartin', 0),
+('Patricia', 'Thompson', '777-999-5555', 'patricia.t@example.com', 'patriciapass', 0),
+('Joseph', 'Garcia', '333-222-8888', 'joseph.g@example.com', 'josephpass', 0),
+('Karen', 'Martinez', '999-555-2222', 'karen.m@example.com', 'karenpassword', 0);
+
 
 
 CREATE TABLE customers (

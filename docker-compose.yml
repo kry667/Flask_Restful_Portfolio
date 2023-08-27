@@ -50,7 +50,7 @@ services:
 
   db:
     build: ./db
-    image: kry667/restful:users_employees_db
+    
     ports:
       - "3306:3306"
     environment:

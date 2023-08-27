@@ -62,10 +62,52 @@ class QueryEmployees(Resource):
             )
         ).all()
         return results
+    
 
+class UpdateEmployeeResource(Resource):
+    def patch(self, employee_id):
+        try:
+            data = request.get_json()
 
+            employee = Employees.query.get(employee_id)
+            if not employee:
+                return {"message": "Customer not found"}, 404
+
+            # Update employee fields from the JSON data
+            employee.first_name = data.get('first_name', employee.first_name)
+            employee.last_name = data.get('last_name', employee.last_name)
+            employee.email = data.get('email', employee.email)
+            employee.phone = data.get('phone', employee.phone)
+            employee.password = data.get('password', employee.phone)
+            employee.admin = data.get('admin', employee.phone)
+
+            db.session.commit()
+
+            return {"message": "Customer updated successfully"}, 200
+
+        except Exception as e:
+            return {"message": "An error occurred while updating the customer"}, 500
+        
+
+class DeleteEmployeeResource(Resource):
+    def delete(self, employee_id):
+        try:
+            employee = Employees.query.get(employee_id)
+            if not employee:
+                return {"message": "Employee not found"}, 404
+
+            db.session.delete(employee)
+            db.session.commit()
+
+            return {"message": "employee deleted successfully"}, 200
+
+        except Exception as e:
+            return {"message": "An error occurred while deleting the employee"}, 500
+
+api.add_resource(DeleteEmployeeResource, '/delete_employee/<int:employee_id>')
 api.add_resource(EmployeesResource, '/employees', '/employees/<int:employee_id>')
 api.add_resource(QueryEmployees, '/query_employees')
+api.add_resource(UpdateEmployeeResource, '/update_employee/<int:employee_id>')
 
 
 
