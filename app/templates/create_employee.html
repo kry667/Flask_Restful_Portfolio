@@ -31,7 +31,7 @@
     </div>
   </header>
 
-    <form action="/add" method="POST">
+    <form action="/create_employee" method="POST">
         <input type="hidden" name="id" value="">
         <div class="container">
             <div class="row mb-3 text-center mt-5">
@@ -53,6 +53,24 @@
 
         <div class="container">
             <div class="row mb-3 text-center mt-5">
+                <div class="col-4 themed-grid-col"><p>Email: </p></div>                
+                <div class="col-4 themed-grid-col">            
+                    <input class="form-control" type="email" name="email" value="" >                 
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row mb-3 text-center mt-5">
+                <div class="col-4 themed-grid-col"><p>Phone: </p></div>                
+                <div class="col-4 themed-grid-col">            
+                    <input class="form-control" type="text" name="phone" value="" >                 
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row mb-3 text-center mt-5">
                 <div class="col-4 themed-grid-col"><p>Password: </p></div>                
                 <div class="col-4 themed-grid-col">                   
                     <input class="form-control" type="text" name="password" value="" >                  
@@ -65,8 +83,8 @@
                     <div class="col-4 themed-grid-col"><label for="boolDropdown">Is Admin:</label></div>
                     <div class="col-4 themed-grid-col">
                         <select type="boolDropdown" class="form-control" name="admin" id="boolDropdown">
-                            <option value="True"  class="container">True</option>
-                            <option value="False" class="container">False</option>
+                          <option value="False" class="container">False</option>
+                          <option value="True"  class="container">True</option>
                         </select>
                     </div>
             </div>

@@ -103,7 +103,33 @@ class DeleteEmployeeResource(Resource):
 
         except Exception as e:
             return {"message": "An error occurred while deleting the employee"}, 500
+        
 
+class CreateEmployeeResource(Resource):
+    def post(self):
+        try:
+            data = request.get_json()
+
+            new_employee = Employees(
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name'),
+                phone=data.get('phone'),
+                email=data.get('email'),
+                password=data.get('password'),
+                admin=data.get('admin')
+            )
+
+            db.session.add(new_employee)
+            db.session.commit()
+
+            return {"message": "Employee created successfully", "employee_id": new_employee.id}, 201
+
+        except Exception as e:
+            return {"message": "An error occurred while creating the employee"}, 500
+
+
+
+api.add_resource(CreateEmployeeResource, '/create_employee')
 api.add_resource(DeleteEmployeeResource, '/delete_employee/<int:employee_id>')
 api.add_resource(EmployeesResource, '/employees', '/employees/<int:employee_id>')
 api.add_resource(QueryEmployees, '/query_employees')
