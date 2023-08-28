@@ -91,9 +91,9 @@ def update_customer():
     if response.status_code == 200:
         # Customer data updated successfully
         return redirect(f"/customer_edit/{customer_id}?query={request.form.get('search')}")
-    else:
-        message = f"Error: {response.status_code}"
-        return render_template("customer.html", result=updated_data, customer_id=customer_id, message=message)
+
+    message = f"Error: {response.status_code}"
+    return render_template("customer.html", result=updated_data, customer_id=customer_id, message=message)
 
 
 @customer_routes_bp.route("/delete_user/<int:customer_id>", methods=["POST"])
@@ -105,12 +105,13 @@ def delete_customer(customer_id):
     if response.status_code == 200:
         # Customer deleted successfully
         return redirect(f"/query_customers?query={request.form.get('query')}")
-    else:
-        user_crud_url = f"http://user_crud:5000/customer_edit/{customer_id}"
-        response = requests.get(user_crud_url)
 
-        if response.status_code == 200:
-            customer_data = response.json()
-            result = customer_data[0]
-        message = f"Error: {response.status_code}"
-        return render_template("customer.html", customer_id=customer_id, result=result, message=message)
+    user_crud_url = f"http://user_crud:5000/customer_edit/{customer_id}"
+    response = requests.get(user_crud_url)
+
+    if response.status_code == 200:
+        customer_data = response.json()
+        result = customer_data[0]
+
+    message = f"Error: {response.status_code}"
+    return render_template("customer.html", customer_id=customer_id, result=result, message=message)
