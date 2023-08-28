@@ -3,6 +3,7 @@ from flask_restful import Resource, Api, fields, marshal_with
 from sqlalchemy import or_
 from flask_sqlalchemy import SQLAlchemy
 import os
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 api = Api(app)
@@ -73,13 +74,21 @@ class UpdateEmployeeResource(Resource):
             if not employee:
                 return {"message": "Customer not found"}, 404
 
+            # Hash the password from request data, if provided
+            hashed_password = None
+            if 'password' in data:
+                hashed_password = generate_password_hash(data['password'], method='sha256')
+
             # Update employee fields from the JSON data
             employee.first_name = data.get('first_name', employee.first_name)
             employee.last_name = data.get('last_name', employee.last_name)
             employee.email = data.get('email', employee.email)
             employee.phone = data.get('phone', employee.phone)
-            employee.password = data.get('password', employee.phone)
-            employee.admin = data.get('admin', employee.phone)
+
+            # Assign hashed password if provided, else retain the existing password
+            employee.password = hashed_password if hashed_password else employee.password
+
+            employee.admin = data.get('admin', employee.admin)
 
             db.session.commit()
 
@@ -87,6 +96,7 @@ class UpdateEmployeeResource(Resource):
 
         except Exception as e:
             return {"message": "An error occurred while updating the customer"}, 500
+
         
 
 class DeleteEmployeeResource(Resource):
@@ -110,12 +120,14 @@ class CreateEmployeeResource(Resource):
         try:
             data = request.get_json()
 
+            hashed_password = generate_password_hash(data.get('password'), method='sha256')
+
             new_employee = Employees(
                 first_name=data.get('first_name'),
                 last_name=data.get('last_name'),
                 phone=data.get('phone'),
                 email=data.get('email'),
-                password=data.get('password'),
+                password=hashed_password,
                 admin=data.get('admin')
             )
 
