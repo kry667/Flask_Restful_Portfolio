@@ -9,9 +9,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 app = Flask(__name__)
 api = Api(app)
 
-app.config[
-    "SQLALCHEMY_DATABASE_URI"
-] = f"mysql+pymysql://{os.environ['MYSQL_USER']}:{os.environ['MYSQL_PASSWORD']}@{os.environ['MYSQL_HOST']}/{os.environ['MYSQL_DB']}"
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    f"mysql+pymysql://{os.environ['MYSQL_USER']}:{os.environ['MYSQL_PASSWORD']}"
+    f"@{os.environ['MYSQL_HOST']}/{os.environ['MYSQL_DB']}"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -41,7 +42,7 @@ employees_fields = {
 class EmployeesResource(Resource):
     @marshal_with(employees_fields)
     def get(self, employee_id=None):
-        if employee_id == None:
+        if employee_id is None:
             results = Employees.query.all()
         else:
             employee = Employees.query.get(employee_id)
@@ -99,8 +100,8 @@ class UpdateEmployeeResource(Resource):
 
             return {"message": "Customer updated successfully"}, 200
 
-        except Exception as e:
-            return {"message": "An error occurred while updating the customer"}, 500
+        except Exception as exc:
+            return {"message": f"An error occurred while updating the customer: {exc}"}, 500
 
 
 class DeleteEmployeeResource(Resource):
@@ -115,8 +116,8 @@ class DeleteEmployeeResource(Resource):
 
             return {"message": "employee deleted successfully"}, 200
 
-        except Exception as e:
-            return {"message": "An error occurred while deleting the employee"}, 500
+        except Exception as exc:
+            return {"message": f"An error occurred while updating the customer: {exc}"}, 500
 
 
 class CreateEmployeeResource(Resource):
@@ -140,8 +141,8 @@ class CreateEmployeeResource(Resource):
 
             return {"message": "Employee created successfully", "employee_id": new_employee.id}, 201
 
-        except Exception as e:
-            return {"message": "An error occurred while creating the employee"}, 500
+        except Exception as exc:
+            return {"message": f"An error occurred while updating the customer: {exc}"}, 500
 
 
 api.add_resource(CreateEmployeeResource, "/create_employee")
