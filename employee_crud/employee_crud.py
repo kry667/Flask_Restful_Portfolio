@@ -117,7 +117,7 @@ class DeleteEmployeeResource(Resource):
             return {"message": "employee deleted successfully"}, 200
 
         except Exception as exc:
-            return {"message": f"An error occurred while updating the customer: {exc}"}, 500
+            return {"message": f"An error occurred while deleting the customer: {exc}"}, 500
 
 
 class CreateEmployeeResource(Resource):
@@ -142,7 +142,7 @@ class CreateEmployeeResource(Resource):
             return {"message": "Employee created successfully", "employee_id": new_employee.id}, 201
 
         except Exception as exc:
-            return {"message": f"An error occurred while updating the customer: {exc}"}, 500
+            return {"message": f"An error occurred while creating the customer: {exc}"}, 500
 
 
 api.add_resource(CreateEmployeeResource, "/create_employee")
