@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Edit</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" href="../static/css/style.css">
 
 </head>
 
 <body>
-    
-  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-    <div class="col-md-3 mb-2 mb-md-0">
-      <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-        <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
-      </a>
-    </div>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li><a href="/admin" class="nav-link px-2 link-secondary">Home</a></li>
-      <li><a href="/employees" class="nav-link px-2">Employees</a></li>
-      <li><a href="#" class="nav-link px-2">Orders</a></li>
-      <li><a href="#" class="nav-link px-2">Products</a></li>
-      <li><a href="/customers" class="nav-link px-2">Customers</a></li>
-    </ul>
+    <header
+        class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+                <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
+        </div>
 
-    <div class="col-md-3 text-end">
-      <a href="/"><button type="button" class="btn btn-primary me-3">Log Out</button></a>
-    </div>
-  </header>
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="/admin" class="nav-link px-2 link-secondary">Home</a></li>
+            <li><a href="/employees" class="nav-link px-2">Employees</a></li>
+            <li><a href="#" class="nav-link px-2">Orders</a></li>
+            <li><a href="#" class="nav-link px-2">Products</a></li>
+            <li><a href="/customers" class="nav-link px-2">Customers</a></li>
+        </ul>
 
-  {% if message %}
-  <p class="container">{{ message }}</p>
-  {% endif %}
+        <div class="col-md-3 text-end">
+            <a href="/"><button type="button" class="btn btn-primary me-3">Log Out</button></a>
+        </div>
+    </header>
+
+    {% if message %}
+    <p class="container">{{ message }}</p>
+    {% endif %}
 
 
     <form action="/update_customer" method="POST" id="update_form">
@@ -42,72 +46,88 @@
         <input type="hidden" name="search" value="{{ query }}">
         <div class="container">
             <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>First Name: </p></div>                
                 <div class="col-4 themed-grid-col">
-                    <input class="form-control" type="text" name="first_name" value="{{ result['first_name'] }}" >                
+                    <p>First Name: </p>
+                </div>
+                <div class="col-4 themed-grid-col">
+                    <input class="form-control" type="text" name="first_name" value="{{ result['first_name'] }}">
                 </div>
             </div>
         </div>
 
         <div class="container">
             <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>Last Name: </p></div>                
-                <div class="col-4 themed-grid-col">            
-                    <input class="form-control" type="text" name="last_name" value="{{ result['last_name'] }}" >                 
+                <div class="col-4 themed-grid-col">
+                    <p>Last Name: </p>
+                </div>
+                <div class="col-4 themed-grid-col">
+                    <input class="form-control" type="text" name="last_name" value="{{ result['last_name'] }}">
                 </div>
             </div>
         </div>
 
         <div class="container">
             <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>E-mail: </p></div>                
-                <div class="col-4 themed-grid-col">                  
-                    <input class="form-control" type="text" name="email" value="{{ result['email'] }}" >               
+                <div class="col-4 themed-grid-col">
+                    <p>E-mail: </p>
+                </div>
+                <div class="col-4 themed-grid-col">
+                    <input class="form-control" type="text" name="email" value="{{ result['email'] }}">
                 </div>
             </div>
         </div>
 
         <div class="container">
             <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>Phone Number: </p></div>                
-                <div class="col-4 themed-grid-col">                    
-                    <input class="form-control" type="text" name="phone" value="{{ result['phone'] }}" >                 
+                <div class="col-4 themed-grid-col">
+                    <p>Phone Number: </p>
+                </div>
+                <div class="col-4 themed-grid-col">
+                    <input class="form-control" type="text" name="phone" value="{{ result['phone'] }}">
                 </div>
             </div>
         </div>
 
         <div class="container">
             <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>Street: </p></div>                
-                <div class="col-4 themed-grid-col">                   
-                    <input class="form-control" type="text" name="street" value="{{ result['street'] }}" >                  
+                <div class="col-4 themed-grid-col">
+                    <p>Street: </p>
+                </div>
+                <div class="col-4 themed-grid-col">
+                    <input class="form-control" type="text" name="street" value="{{ result['street'] }}">
                 </div>
             </div>
         </div>
 
         <div class="container">
             <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>City: </p></div>               
-                <div class="col-4 themed-grid-col">                   
-                    <input class="form-control" type="text" name="city" value="{{ result['city'] }}" >               
+                <div class="col-4 themed-grid-col">
+                    <p>City: </p>
+                </div>
+                <div class="col-4 themed-grid-col">
+                    <input class="form-control" type="text" name="city" value="{{ result['city'] }}">
                 </div>
             </div>
         </div>
 
         <div class="container">
             <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>Zip Code: </p></div>                
-                <div class="col-4 themed-grid-col">                   
-                    <input class="form-control" type="text" name="zip_code" value="{{ result['zip_code'] }}" >                
+                <div class="col-4 themed-grid-col">
+                    <p>Zip Code: </p>
+                </div>
+                <div class="col-4 themed-grid-col">
+                    <input class="form-control" type="text" name="zip_code" value="{{ result['zip_code'] }}">
                 </div>
             </div>
         </div>
 
         <div class="container">
             <div class="row mb-3 text-center mt-5">
-                <div class="col-4 themed-grid-col"><p>State: </p></div>               
-                <div class="col-4 themed-grid-col">               
-                    <input class="form-control" type="text" name="state" value="{{ result['state'] }}" >
+                <div class="col-4 themed-grid-col">
+                    <p>State: </p>
+                </div>
+                <div class="col-4 themed-grid-col">
+                    <input class="form-control" type="text" name="state" value="{{ result['state'] }}">
                 </div>
             </div>
         </div>
@@ -121,7 +141,7 @@
             </div>
         </div>
     </form>
- 
+
     <form action="/delete_user/{{ result['id'] }}" method="POST" id="delete_form">
         <input type="hidden" name="query" value="{{ query }}">
         <div class="row mb-5">
@@ -132,7 +152,8 @@
     </form>
 
     <!-- Bootstrap modal for confirmation -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -155,7 +176,7 @@
         const deleteButton = document.getElementById('delete_button');
 
         // Add a click event listener to the delete button outside the modal
-        deleteButton.addEventListener('click', function() {
+        deleteButton.addEventListener('click', function () {
             // Show the confirmation modal using JavaScript
             $('#confirmationModal').modal('show');
         });
@@ -164,13 +185,16 @@
         const confirmDeleteButton = document.getElementById('confirmDeleteButton');
 
         // Add a click event listener to the confirm delete button in the modal
-        confirmDeleteButton.addEventListener('click', function() {
+        confirmDeleteButton.addEventListener('click', function () {
             // Submit the delete form
             document.getElementById('delete_form').submit();
         });
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>

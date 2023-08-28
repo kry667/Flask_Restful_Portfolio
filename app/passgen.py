@@ -1,9 +1,9 @@
 import random
-import string
 import secrets
+import string
+
 
 def password_generator() -> str:
-    
     password_list = []
 
     for _ in range(12):
@@ -16,13 +16,14 @@ def password_generator() -> str:
         password_list.append(secrets.choice(string.digits))
 
     for index, value in enumerate(password_list):
-      if value == "l":
-        password_list[index] = "L"
-      if value == "O":
-        password_list[index] = "o"
+        if value == "l":
+            password_list[index] = "L"
+        if value == "O":
+            password_list[index] = "o"
 
     random.shuffle(password_list)
-  
-    return ''.join(password_list)  
+
+    return "".join(password_list)
+
 
 print(password_generator())
