@@ -48,6 +48,26 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DB=${MYSQL_DB}
 
+  auth:
+    build: ./auth
+    image: kry667/restful:project101-auth
+    volumes:
+      - ./auth:/auth
+    ports:
+      - "5003:5000"
+    networks:
+      - my-network1
+    depends_on:
+      - user_crud
+      - employee_crud
+      - app
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DB=${MYSQL_DB}
+      - SECRET_KEY=${SECRET_KEY}
+
   db:
     build: ./db
     
@@ -63,6 +83,14 @@ services:
       - my-network1
     volumes:
       - db-data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    networks:
+      - my-network1
+    ports:
+      - "6379:6379"
+
 
 networks:
   my-network1:

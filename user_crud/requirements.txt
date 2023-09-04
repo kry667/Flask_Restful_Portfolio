@@ -4,3 +4,6 @@ flask_sqlalchemy
 SQLAlchemy
 cryptography
 pymysql
+python-dotenv
+Flask-JWT-Extended
+redis

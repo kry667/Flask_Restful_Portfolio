@@ -13,26 +13,30 @@
 
   <div class="form-signin w-100 m-auto d-flex justify-content-center align-items-center"
     style="display: flex; height: 100vh;">
-    <form action="/admin" method="get">
+    <form action="/login" method="POST">
       <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-lock-fill"
-        viewBox="0 0 16 16">
+        viewBox="1 0 16 16">
         <path
           d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
       </svg>
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
       <div class="form-floating">
-        <input type="text" class="form-control" id="floatingInput" placeholder="login">
+        <input type="text" class="form-control" id="floatingInput" name="login" placeholder="login">
         <label for="floatingInput">Login</label>
       </div>
       <div class="form-floating">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
         <label for="floatingPassword">Password</label>
       </div>
 
       <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+      {% if message %}
+      <p class="d-flex justify-content-center" style="color: rgb(250, 76, 76);">{{message}}</p>
+      {% endif %}
     </form>
   </div>
+
 
 
 

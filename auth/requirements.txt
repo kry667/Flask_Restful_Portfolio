@@ -1,0 +1,9 @@
+Flask
+Flask-JWT-Extended
+SQLAlchemy
+cryptography
+python-dotenv
+requests
+flask_sqlalchemy
+flask-sqlalchemy
+redis

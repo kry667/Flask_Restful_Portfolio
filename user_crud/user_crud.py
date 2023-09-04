@@ -1,17 +1,29 @@
 import os
-
+from dotenv import load_dotenv
 from flask import Flask, request
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
+from sqlalchemy.exc import SQLAlchemyError
+from flask_jwt_extended import jwt_required
+
 
 app = Flask(__name__)
 api = Api(app)
 
+
+if 'ENV' in os.environ and os.environ['ENV'] == 'testing':
+    # Load testing environment variables from .env.testing
+    load_dotenv('.env.testing')
+
+# Load production environment variables from .env
+load_dotenv()
+
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = f"mysql+pymysql://{os.environ['MYSQL_USER']}:{os.environ['MYSQL_PASSWORD']}@{os.environ['MYSQL_HOST']}/{os.environ['MYSQL_DB']}"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 db = SQLAlchemy(app)
 
@@ -46,21 +58,38 @@ class QueryResource(Resource):
     @marshal_with(customer_fields)
     def get(self):
         search_query = request.args.get("query")
-        results = self.query_customers(search_query)
-        return results
+
+        if search_query is None:
+            return {"message": "Query parameter 'query' is missing or invalid"}, 400
+        
+        try:
+            results = self.query_customers(search_query)
+            return results
+        except SQLAlchemyError as e:
+            # Handle the database error and return an error response
+            db.session.rollback()  # Rollback the database transaction
+            error_message = "Database error"
+            return {"message": error_message}, 500
 
     def query_customers(self, search_query):
-        results = Customers.query.filter(
-            or_(
-                Customers.id == search_query,
-                Customers.first_name.like(f"%{search_query}%"),
-                Customers.last_name.like(f"%{search_query}%"),
-                Customers.email.like(f"%{search_query}%"),
-                Customers.phone.like(f"%{search_query}%"),
-                Customers.city.like(f"%{search_query}%"),
-            )
-        ).all()
-        return results
+        try:
+            results = Customers.query.filter(
+                or_(
+                    Customers.id == search_query,
+                    Customers.first_name.like(f"%{search_query}%"),
+                    Customers.last_name.like(f"%{search_query}%"),
+                    Customers.email.like(f"%{search_query}%"),
+                    Customers.phone.like(f"%{search_query}%"),
+                    Customers.city.like(f"%{search_query}%"),
+                )
+            ).all()
+            return results
+        except SQLAlchemyError as e:
+            db.session.rollback()  # Rollback the database transaction
+            error_message = "Database error"
+            # Handle the database error and return an appropriate response
+            return {"message": error_message}, 500
+
 
 
 class CustomersResource(Resource):

@@ -1,12 +1,49 @@
 import requests
-from flask import Blueprint, redirect, render_template, request
+from flask import Blueprint, redirect, render_template, request, url_for
+
 
 employee_routes_bp = Blueprint("employee_routes", __name__)
 
 
+@employee_routes_bp.route("/login", methods=["POST", "GET"])
+def login():
+
+    # Get the user input from the login form
+    employee_id = request.form.get("login")
+    password = request.form.get("password")
+
+    if not employee_id and not password:
+        return render_template("index.html")
+
+    credentials = {
+        "login" : employee_id,
+        "password": password
+    }
+
+    try:
+        response_from_auth = requests.get("http://auth:5000/login", params=credentials)
+        if response_from_auth.status_code == 200:
+            auth_data = response_from_auth.json()
+        if "token" in auth_data:
+            # Store the token for future use (e.g., in a session or a cookie)
+            token = auth_data["token"]
+            # Redirect to a protected route, passing the token as needed
+            headers = {"Authorization": f"Bearer {token}"}
+            response = requests.get("http://app:5000/admin", headers=headers)
+            if response.status_code == 200:
+                return redirect(f"/admin?msg={token}")
+          
+    except Exception as e:
+        pass
+
+    # If credentials do not match or if there's an error, render the "index.html" template with an error message
+    return render_template("index.html", message="Invalid credentials!")
+
+
+
 @employee_routes_bp.route("/employees")
 def all_employees():
-    # Make a request to the user_crud API to get all customers data
+    # Make a request to the user_crud API to get all employees data and send it to front-end
     employee_crud_url = "http://employee_crud:5000/employees"
     response = requests.get(employee_crud_url)
 
@@ -75,7 +112,7 @@ def edit_employee(employee_id):
 def update_employee():
     employee_id = request.form.get("employee_id")
     is_admin = True if request.form.get("admin").lower() == "true" else False
-    # Get the updated data from the form
+    # Get the updated data from the HTML form and format it to json 
     updated_data = {
         "first_name": request.form.get("first_name"),
         "last_name": request.form.get("last_name"),
