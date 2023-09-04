@@ -60,7 +60,7 @@ jobs:
         MYSQL_USER: ${{ secrets.MYSQL_USER }}
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         MYSQL_DB: ${{ secrets.MYSQL_DB }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
       run: |
         docker build -t kry667/restful:project101-auth ./auth
         docker push kry667/restful:project101-auth
