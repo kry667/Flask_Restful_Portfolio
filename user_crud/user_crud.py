@@ -1,16 +1,13 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask, request, current_app
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from flask_jwt_extended import jwt_required
-
-
-app = Flask(__name__)
-api = Api(app)
-
+from flask_jwt_extended import JWTManager
+from redis import Redis
 
 if 'ENV' in os.environ and os.environ['ENV'] == 'testing':
     # Load testing environment variables from .env.testing
@@ -18,6 +15,24 @@ if 'ENV' in os.environ and os.environ['ENV'] == 'testing':
 
 # Load production environment variables from .env
 load_dotenv()
+
+app = Flask(__name__)
+api = Api(app)
+
+redis_client = Redis(host="redis", port=6379)  # Use the same service name and port
+app.config["JWT_BLACKLIST_STORE"] = redis_client
+
+app.config["JWT_SECRET_KEY"] = os.environ["JWT_SECRET_KEY"]
+app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+app.config["JWT_HEADER_NAME"] = "Authorization"
+app.config["JWT_HEADER_TYPE"] = "Bearer"
+
+jwt = JWTManager(app)
+
+redis_key = "aaa"
+access_token = redis_client.get(redis_key)
+
+app.config["MY_GLOBAL_TOKEN"] = access_token
 
 app.config[
     "SQLALCHEMY_DATABASE_URI"
@@ -93,8 +108,10 @@ class QueryResource(Resource):
 
 
 class CustomersResource(Resource):
+    @jwt_required()
     @marshal_with(customer_fields)
     def get(self, customer_id=None):
+        access_token = current_app.config.get("MY_GLOBAL_TOKEN")
         if customer_id is None:
             # Retrieve all customers
             results = Customers.query.all()

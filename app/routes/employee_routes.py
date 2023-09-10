@@ -1,5 +1,6 @@
 import requests
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask_jwt_extended import jwt_required
+from flask import Blueprint, redirect, render_template, request, current_app
 
 
 employee_routes_bp = Blueprint("employee_routes", __name__)
@@ -7,16 +8,15 @@ employee_routes_bp = Blueprint("employee_routes", __name__)
 
 @employee_routes_bp.route("/login", methods=["POST", "GET"])
 def login():
-
     # Get the user input from the login form
     employee_id = request.form.get("login")
     password = request.form.get("password")
 
-    if not employee_id and not password:
+    if not employee_id or not password:
         return render_template("index.html")
 
     credentials = {
-        "login" : employee_id,
+        "login": employee_id,
         "password": password
     }
 
@@ -24,21 +24,21 @@ def login():
         response_from_auth = requests.get("http://auth:5000/login", params=credentials)
         if response_from_auth.status_code == 200:
             auth_data = response_from_auth.json()
-        if "token" in auth_data:
-            # Store the token for future use (e.g., in a session or a cookie)
-            token = auth_data["token"]
-            # Redirect to a protected route, passing the token as needed
-            headers = {"Authorization": f"Bearer {token}"}
-            response = requests.get("http://app:5000/admin", headers=headers)
-            if response.status_code == 200:
-                return redirect(f"/admin?msg={token}")
-          
+            token_identifier = auth_data.get("token_identifier")
+
+            if token_identifier:
+                # Access the token using the token identifier from app config
+                token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
+
+                if token:
+                    # Redirect to the /admin route
+                    return redirect(f"/admin?{token}")
+        
     except Exception as e:
         pass
 
     # If credentials do not match or if there's an error, render the "index.html" template with an error message
     return render_template("index.html", message="Invalid credentials!")
-
 
 
 @employee_routes_bp.route("/employees")

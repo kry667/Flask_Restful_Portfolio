@@ -13,6 +13,9 @@ services:
     depends_on:
       - user_crud
       - employee_crud
+      - redis
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
   user_crud:
     build: ./user_crud
@@ -25,11 +28,13 @@ services:
       - my-network1
     depends_on:
       - db
+      - redis
     environment:
       - MYSQL_HOST=${MYSQL_HOST}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DB=${MYSQL_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
   employee_crud:
     build: ./employee_crud
@@ -42,11 +47,13 @@ services:
       - my-network1
     depends_on:
       - db
+      - redis
     environment:
       - MYSQL_HOST=${MYSQL_HOST}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DB=${MYSQL_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
   auth:
     build: ./auth
@@ -61,6 +68,7 @@ services:
       - user_crud
       - employee_crud
       - app
+      - redis
     environment:
       - MYSQL_HOST=${MYSQL_HOST}
       - MYSQL_USER=${MYSQL_USER}

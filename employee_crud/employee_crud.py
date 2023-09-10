@@ -5,9 +5,24 @@ from flask_restful import Api, Resource, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 from werkzeug.security import generate_password_hash
+from flask_jwt_extended import JWTManager
+from flask_jwt_extended import jwt_required
+
+from redis import Redis
+
 
 app = Flask(__name__)
 api = Api(app)
+
+app.config["JWT_SECRET_KEY"] = os.environ["JWT_SECRET_KEY"]
+app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+app.config["JWT_HEADER_NAME"] = "Authorization"
+app.config["JWT_HEADER_TYPE"] = "Bearer"
+
+redis_client = Redis(host="redis", port=6379)  # Use the same service name and port
+app.config["JWT_BLACKLIST_STORE"] = redis_client
+
+jwt = JWTManager(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     f"mysql+pymysql://{os.environ['MYSQL_USER']}:{os.environ['MYSQL_PASSWORD']}"

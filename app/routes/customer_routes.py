@@ -1,14 +1,18 @@
 import requests
-from flask import Blueprint, redirect, render_template, request
+from flask import Blueprint, redirect, render_template, request, current_app
 
 customer_routes_bp = Blueprint("customer_routes", __name__)
+
 
 
 @customer_routes_bp.route("/customers")
 def customers():
     # Make a request to the user_crud API to get all customers data
-    user_crud_url = "http://user_crud:5000/customers"
-    response = requests.get(user_crud_url)
+    with current_app.app_context():
+        access_token = current_app.config.get("MY_GLOBAL_TOKEN")
+        user_crud_url = "http://user_crud:5000/customers"
+        headers = {"Authorization": f"Bearer b%27eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5NDM2MjE5MCwianRpIjoiYjA0YzNkYTAtOTQ4ZC00NmY4LWE4NjYtMmM5MjI4ZWUzM2Q2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6W3siaWQiOjEsImZpcnN0X25hbWUiOiJLcnkiLCJsYXN0X25hbWUiOiJXb2xsbGwiLCJwaG9uZSI6IjY2Ni02NjctNjY3IiwiZW1haWwiOiJrcnlAd29sLmNvbSIsInBhc3N3b3JkIjoic2hhMjU2JHRqRmJHdE9YVHc2c1RkQUQkYjE1ODQ1MTA3MjRkYzMxMTllN2U5YWY4ZGZmMDkyOGIxMDYxNzZiZDAwZGYyMTlkMTIwYWIyNzgwMTNkMjcyOSIsImFkbWluIjp0cnVlfV0sIm5iZiI6MTY5NDM2MjE5MCwiZXhwIjoxNjk0MzYyMzEwLCJhZG1pbiI6dHJ1ZX0.0L4T7Iq_SHjlxE5ncBC-t6GejCC58pPAZPNbrTMTUm4%27"}
+        response = requests.get(user_crud_url, headers=headers)
 
     if response.status_code == 200:
         customers_data = response.json()

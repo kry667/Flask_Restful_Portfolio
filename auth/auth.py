@@ -1,5 +1,6 @@
 import os
 import requests
+import uuid  # Import UUID for generating a unique token identifier
 
 from datetime import timedelta
 from functools import wraps
@@ -9,8 +10,6 @@ from redis import Redis
 
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
-from flask_jwt_extended import current_user
-from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
 
 
@@ -21,7 +20,7 @@ from flask import request
 
 load_dotenv()
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.environ["JWT_SECRET_KEY"]
+app.config["JWT_SECRET_KEY"] = os.environ["JWT_SECRET_KEY"]
 app.config["JWT_TOKEN_LOCATION"] = ["headers"]
 app.config["JWT_HEADER_NAME"] = "Authorization"
 app.config["JWT_HEADER_TYPE"] = "Bearer"
@@ -31,8 +30,6 @@ redis_client = Redis(host="redis", port=6379)  # Use the service name from Docke
 app.config["JWT_BLACKLIST_STORE"] = redis_client
 
 jwt = JWTManager(app)
-
-
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -54,14 +51,24 @@ def login():
 
                     access_token = create_access_token(identity=employee_data,
                                                        additional_claims={"admin": True})
+                    # Generate a unique identifier for the token
+                    token_identifier = "aaa"
                     
-                    return jsonify({"logged": True, "token": access_token})
+                    # Store the token in Redis with the identifier
+                    redis_client.set(token_identifier, access_token, ex=3600)
+                    print(access_token)  # Set expiration time as needed
+                    return jsonify({"logged": True, "token_identifier": token_identifier})
 
     except Exception:
         pass
 
     return None
 
+
+# Function to generate a unique token identifier
+def generate_unique_token_identifier():
+    # Use UUID to generate a unique identifier
+    return str(uuid.uuid4())
 
 def admin_required(function):
     @wraps(function)
@@ -73,10 +80,6 @@ def admin_required(function):
             return jsonify({"message": "Admin access required"}), 403  # Forbidden
 
     return wrapper
-
-
-
-
 
 
 
