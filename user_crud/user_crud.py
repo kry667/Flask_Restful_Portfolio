@@ -7,7 +7,8 @@ from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
-from redis import Redis
+from redis import Redis, ConnectionPool
+
 
 if 'ENV' in os.environ and os.environ['ENV'] == 'testing':
     # Load testing environment variables from .env.testing
@@ -19,7 +20,8 @@ load_dotenv()
 app = Flask(__name__)
 api = Api(app)
 
-redis_client = Redis(host="redis", port=6379)  # Use the same service name and port
+redis_pool = ConnectionPool(host="redis", port=6379, decode_responses=True)
+redis_client = Redis(connection_pool=redis_pool)
 app.config["JWT_BLACKLIST_STORE"] = redis_client
 
 app.config["JWT_SECRET_KEY"] = os.environ["JWT_SECRET_KEY"]
@@ -30,7 +32,9 @@ app.config["JWT_HEADER_TYPE"] = "Bearer"
 jwt = JWTManager(app)
 
 redis_key = "aaa"
+
 access_token = redis_client.get(redis_key)
+
 
 app.config["MY_GLOBAL_TOKEN"] = access_token
 
