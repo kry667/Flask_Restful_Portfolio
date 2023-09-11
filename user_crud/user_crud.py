@@ -29,18 +29,14 @@ app.config["JWT_TOKEN_LOCATION"] = ["headers"]
 app.config["JWT_HEADER_NAME"] = "Authorization"
 app.config["JWT_HEADER_TYPE"] = "Bearer"
 
+
 jwt = JWTManager(app)
 
-redis_key = "aaa"
-
-access_token = redis_client.get(redis_key)
-
-
-app.config["MY_GLOBAL_TOKEN"] = access_token
 
 app.config[
     "SQLALCHEMY_DATABASE_URI"
-] = f"mysql+pymysql://{os.environ['MYSQL_USER']}:{os.environ['MYSQL_PASSWORD']}@{os.environ['MYSQL_HOST']}/{os.environ['MYSQL_DB']}"
+    ] = f"mysql+pymysql://{os.environ['MYSQL_USER']}:{os.environ['MYSQL_PASSWORD']}@{os.environ['MYSQL_HOST']}/{os.environ['MYSQL_DB']}"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -74,6 +70,7 @@ customer_fields = {
 
 
 class QueryResource(Resource):
+    @jwt_required()
     @marshal_with(customer_fields)
     def get(self):
         search_query = request.args.get("query")

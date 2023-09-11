@@ -1,7 +1,6 @@
 import requests
 from flask_jwt_extended import jwt_required
-from flask import Blueprint, redirect, render_template, request, current_app
-
+from flask import Blueprint, redirect, render_template, request, current_app, session
 
 employee_routes_bp = Blueprint("employee_routes", __name__)
 
@@ -21,71 +20,85 @@ def login():
     }
 
     try:
+        # Make a request to the /auth/login endpoint
         response_from_auth = requests.get("http://auth:5000/login", params=credentials)
-        if response_from_auth.status_code == 200:
-            auth_data = response_from_auth.json()
-            token_identifier = auth_data.get("token_identifier")
-
-            if token_identifier:
-                # Access the token using the token identifier from app config
-                token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
-
-                if token:
-                    # Redirect to the /admin route
-                    return redirect(f"/admin?{token}")
         
+        if response_from_auth.status_code != 200:
+            # If the authentication fails, return an error message
+            return render_template("index.html", message="Invalid credentials!")
+
+        auth_data = response_from_auth.json()
+        token_identifier = auth_data.get("token_identifier")
+        session["token_identifier"] = token_identifier
+
+        if not token_identifier:
+            # If the token identifier is missing, return an error message
+            return render_template("index.html", message="Invalid token identifier!")
+        
+
+        # Access the token using the token identifier from app config
+        token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
+
+        if not token:
+            # If the token is missing, return an error message
+            return render_template("index.html", message="Invalid token!")
+
+        
+        admin_url = "http://app:5000/admin"  # Use the appropriate URL
+        headers = {"Authorization": f"Bearer {token}"}
+        response_to_admin = requests.get(admin_url, headers=headers)
+
+        if response_to_admin.status_code == 200:
+            
+            return render_template("admin.html")
+
     except Exception as e:
         pass
 
-    # If credentials do not match or if there's an error, render the "index.html" template with an error message
-    return render_template("index.html", message="Invalid credentials!")
+    # If there's any other error, return an error message
+    return render_template("index.html", message="An error occurred during login.")
 
 
+
+# Make a request to the user_crud API to get all employees data and send it to the front-end
 @employee_routes_bp.route("/employees")
 def all_employees():
-    # Make a request to the user_crud API to get all employees data and send it to front-end
+    token_identifier = session["token_identifier"]
+    token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
+    
     employee_crud_url = "http://employee_crud:5000/employees"
-    response = requests.get(employee_crud_url)
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.get(employee_crud_url, headers=headers)
 
-    if response.status_code == 200:
-        employees_data = response.json()
-        if not employees_data:
-            message = "No results found."
-        else:
-            message = None
-        results_count = len(employees_data)
-    else:
-        message = response.status_code
-        employees_data = []
-        results_count = 0
+    if response.status_code != 200:
+        return render_template("employees.html", results=[], message=response.status_code, results_count=0)
+
+    employees_data = response.json()
+    results_count = len(employees_data)
+    message = None if results_count > 0 else "No results found."
 
     return render_template("employees.html", results=employees_data, message=message, results_count=results_count)
+
 
 
 @employee_routes_bp.route("/query_employees", methods=["POST", "GET"])
 def query_employees():
     search_query = request.form.get("search") or request.args.get("query")
+    
     # Make a request to the user_crud API to get search results
     employee_crud_url = "http://employee_crud:5000/query_employees"
     params = {"query": search_query}
     response = requests.get(employee_crud_url, params=params)
 
-    if response.status_code == 200:
-        employees_data = response.json()
-        if not employees_data:
-            message = "No results found."
-            results_count = 0
-        else:
-            message = None
-            results_count = len(employees_data)
-    else:
-        message = response.status_code
-        employees_data = []
-        results_count = 0
+    if response.status_code != 200:
+        return render_template("employees.html", results=[], message=response.status_code, results_count=0, query=search_query)
 
-    return render_template(
-        "employees.html", results=employees_data, message=message, results_count=results_count, query=search_query
-    )
+    employees_data = response.json()
+    results_count = len(employees_data)
+    message = None if results_count > 0 else "No results found."
+
+    return render_template("employees.html", results=employees_data, message=message, results_count=results_count, query=search_query)
+
 
 
 # Fetch single employee data from Restful Api and renders Employee Edition page with this data

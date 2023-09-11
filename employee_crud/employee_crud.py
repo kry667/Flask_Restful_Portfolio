@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import jwt_required
 
-from redis import Redis
+from redis import Redis, ConnectionPool
 
 
 app = Flask(__name__)
@@ -19,7 +19,8 @@ app.config["JWT_TOKEN_LOCATION"] = ["headers"]
 app.config["JWT_HEADER_NAME"] = "Authorization"
 app.config["JWT_HEADER_TYPE"] = "Bearer"
 
-redis_client = Redis(host="redis", port=6379)  # Use the same service name and port
+redis_pool = ConnectionPool(host="redis", port=6379, decode_responses=True)
+redis_client = Redis(connection_pool=redis_pool)
 app.config["JWT_BLACKLIST_STORE"] = redis_client
 
 jwt = JWTManager(app)
@@ -55,6 +56,7 @@ employees_fields = {
 
 
 class EmployeesResource(Resource):
+    @jwt_required()
     @marshal_with(employees_fields)
     def get(self, employee_id=None):
         if employee_id is None:
@@ -67,6 +69,7 @@ class EmployeesResource(Resource):
 
 
 class QueryEmployees(Resource):
+    @jwt_required()
     @marshal_with(employees_fields)
     def get(self):
         search_query = request.args.get("query")
