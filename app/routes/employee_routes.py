@@ -58,45 +58,39 @@ def login():
 
 
 
-# Make a request to the user_crud API to get all employees data and send it to the front-end
-@employee_routes_bp.route("/employees")
-def all_employees():
+def get_employee_data(endpoint, params=None):
+    """
+    Helper function to make a request to the employee_crud API and retrieve data.
 
+    Args:
+        endpoint (str): The API endpoint to request data from.
+        params (dict, optional): Additional query parameters for the request.
+
+    Returns:
+        tuple: A tuple containing the response data, response status code, and message.
+    """
     headers = set_request_headers()
-    
-    employee_crud_url = "http://employee_crud:5000/employees"
-    response = requests.get(employee_crud_url, headers=headers)
+    response = requests.get(endpoint, headers=headers, params=params)
 
     if response.status_code != 200:
-        return render_template("employees.html", results=[], message=response.status_code, results_count=0)
+        return [], response.status_code, None
 
-    employees_data = response.json()
-    results_count = len(employees_data)
+    data = response.json()
+    results_count = len(data)
     message = None if results_count > 0 else "No results found."
 
-    return render_template("employees.html", results=employees_data, message=message, results_count=results_count)
+    return data, 200, message
 
-
+@employee_routes_bp.route("/employees")
+def all_employees():
+    employees_data, status_code, message = get_employee_data("http://employee_crud:5000/employees")
+    return render_template("employees.html", results=employees_data, message=message, results_count=len(employees_data))
 
 @employee_routes_bp.route("/query_employees", methods=["POST", "GET"])
 def query_employees():
     search_query = request.form.get("search") or request.args.get("query")
-
-    headers = set_request_headers()
-    
-    # Make a request to the user_crud API to get search results
-    employee_crud_url = "http://employee_crud:5000/query_employees"
-    params = {"query": search_query}
-    response = requests.get(employee_crud_url, headers=headers, params=params)
-
-    if response.status_code != 200:
-        return render_template("employees.html", results=[], message=response.status_code, results_count=0, query=search_query)
-
-    employees_data = response.json()
-    results_count = len(employees_data)
-    message = None if results_count > 0 else "No results found."
-
-    return render_template("employees.html", results=employees_data, message=message, results_count=results_count, query=search_query)
+    employees_data, status_code, message = get_employee_data("http://employee_crud:5000/query_employees", params={"query": search_query})
+    return render_template("employees.html", results=employees_data, message=message, results_count=len(employees_data), query=search_query)
 
 
 
