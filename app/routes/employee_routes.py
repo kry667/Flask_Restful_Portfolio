@@ -35,8 +35,6 @@ def login():
             # If the token identifier is missing, return an error message
             return render_template("index.html", message="Invalid token identifier!")
         
-
-        # Access the token using the token identifier from app config
         token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
 
         if not token:
@@ -63,11 +61,10 @@ def login():
 # Make a request to the user_crud API to get all employees data and send it to the front-end
 @employee_routes_bp.route("/employees")
 def all_employees():
-    token_identifier = session["token_identifier"]
-    token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
+
+    headers = set_request_headers()
     
     employee_crud_url = "http://employee_crud:5000/employees"
-    headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(employee_crud_url, headers=headers)
 
     if response.status_code != 200:
@@ -84,11 +81,13 @@ def all_employees():
 @employee_routes_bp.route("/query_employees", methods=["POST", "GET"])
 def query_employees():
     search_query = request.form.get("search") or request.args.get("query")
+
+    headers = set_request_headers()
     
     # Make a request to the user_crud API to get search results
     employee_crud_url = "http://employee_crud:5000/query_employees"
     params = {"query": search_query}
-    response = requests.get(employee_crud_url, params=params)
+    response = requests.get(employee_crud_url, headers=headers, params=params)
 
     if response.status_code != 200:
         return render_template("employees.html", results=[], message=response.status_code, results_count=0, query=search_query)
@@ -105,8 +104,11 @@ def query_employees():
 @employee_routes_bp.route("/employee_edit/<int:employee_id>", methods=["GET", "POST"])
 def edit_employee(employee_id):
     search_query = request.args.get("query")
+
+    headers = set_request_headers()
+
     user_crud_url = f"http://employee_crud:5000/employees/{employee_id}"
-    response = requests.get(user_crud_url)
+    response = requests.get(user_crud_url, headers=headers)
 
     if response.status_code == 200:
         employee_data = response.json()
@@ -189,3 +191,16 @@ def create_employee():
     else:
         message = f"Error: {response.status_code}"
         return render_template("create_employee.html", message=message, employee_data=employee_data)
+
+def set_request_headers():
+    """
+    Retrieve the token_identifier from the user's session,
+    fetch the JWT access_token associated with it from Redis,
+    and return a request header with the access token for authentication.
+
+    Returns:
+        dict: A dictionary containing the request header with the JWT access token.
+    """
+    token_identifier = session["token_identifier"]
+    token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
+    return {"Authorization": f"Bearer {token}"}

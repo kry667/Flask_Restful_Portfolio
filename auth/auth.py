@@ -11,6 +11,7 @@ from redis import Redis, ConnectionPool
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import current_user
 
 
 from flask import Flask
@@ -38,7 +39,7 @@ def login():
 
     employee_id = request.args.get("login")
     password = request.args.get("password")
-    
+
     # Create temporary token to access the employees Resource
     temp_token = create_access_token(identity="temp")
     redis_client.set("temp", temp_token, ex=15)
@@ -53,10 +54,11 @@ def login():
 
             # Check if the provided password matches the hashed password
             if check_password_hash(employee_data[0]["password"], password):
+            
 
                 access_token = create_access_token(identity=employee_data,
                                                     additional_claims={"admin": True})
-                # Generate a unique identifier for the token
+        
                 token_identifier = generate_unique_token_identifier()
                 
                 # Store the token in Redis with the identifier
@@ -69,10 +71,9 @@ def login():
     return None
 
 
-# Function to generate a unique token identifier
 def generate_unique_token_identifier():
-    # Use UUID to generate a unique identifier
     return str(uuid.uuid4())
+
 
 def admin_required(function):
     @wraps(function)

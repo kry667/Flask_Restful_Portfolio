@@ -6,15 +6,10 @@ customer_routes_bp = Blueprint("customer_routes", __name__)
 
 @customer_routes_bp.route("/customers")
 def customers():
-    # Retrieve the token identifier from the session
-    token_identifier = session.get("token_identifier")
+    
+    headers = set_request_headers()
 
-    # Retrieve the access token using the token identifier from app config
-    access_token = current_app.config["JWT_BLACKLIST_STORE"].get(token_identifier)
-
-    # Make a request to the user_crud API using the access token
     user_crud_url = "http://user_crud:5000/customers"
-    headers = {"Authorization": f"Bearer {access_token}"}
     response = requests.get(user_crud_url, headers=headers)
 
     # Process the response data
@@ -35,9 +30,7 @@ def customers():
 def query_users():
     search_query = request.form.get("search") or request.args.get("query")
     
-    token_identifier = session.get("token_identifier")
-    access_token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
-    headers = {"Authorization": f"Bearer {access_token}"}
+    headers = set_request_headers()
     
     # Make a request to the user_crud API to get search results
     user_crud_url = "http://user_crud:5000/query_customers"
@@ -67,12 +60,9 @@ def query_users():
 def edit_customer(customer_id):
     search_query = request.args.get("query")
 
-    with current_app.app_context():
-        token_identifier = session.get("token_identifier")
-        access_token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
-        user_crud_url = f"http://user_crud:5000/customer_edit/{customer_id}"
-        headers = {"Authorization": f"Bearer {access_token}"}
-        response = requests.get(user_crud_url, headers=headers)
+    headers = set_request_headers()
+    user_crud_url = f"http://user_crud:5000/customer_edit/{customer_id}"
+    response = requests.get(user_crud_url, headers=headers)
 
     if response.status_code == 200:
         customer_data = response.json()
@@ -131,3 +121,16 @@ def delete_customer(customer_id):
 
     message = f"Error: {response.status_code}"
     return render_template("customer.html", customer_id=customer_id, result=result, message=message)
+
+def set_request_headers():
+    """
+    Retrieve the token_identifier from the user's session,
+    fetch the JWT access_token associated with it from Redis,
+    and return a request header with the access token for authentication.
+
+    Returns:
+        dict: A dictionary containing the request header with the JWT access token.
+    """
+    token_identifier = session["token_identifier"]
+    token = current_app.config.get("JWT_BLACKLIST_STORE").get(token_identifier)
+    return {"Authorization": f"Bearer {token}"}
