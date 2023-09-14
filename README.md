@@ -31,16 +31,20 @@ All microservices are containerized in separate Docker containers and communicat
 
 # Installation:
 
-1. Ensure Docker is installed on your system.
+1. Ensure Docker and Git are installed on your system.
 
 2. Create a Docker network:
 
 ```
 docker network create my-network1
 ```
-3. Clone this repository.
+3. Clone this repository inside empty folder.
 
-4. Create .env with:
+```
+git clone https://github.com/kry667/Flask_Restful_Portfolio.git
+```
+
+4. Create .env file with:
 ```
 MYSQL_HOST=db
 MYSQL_USER=user
